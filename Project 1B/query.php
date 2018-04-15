@@ -32,26 +32,3 @@ Enter a SELECT Query below, or Enter SHOW TABLES to get list of all tables
         }
 
      ?>
-     <tr>
-    <?php
-        $i = 0;
-        while($row = mysql_fetch_row($rs)) {
-            echo '<tr align="center">';
-		    $count = count($row);
-		    $y = 0;
-            while($y < $count) {
-			    $c_row = current($row);
-
-			    //if any value is NULL (blank), replace it with N/A
-			    if($c_row==NULL)
-				    echo '<td>N/A</td>';
-			    else
-				    echo '<td>' . $c_row . '</td>';
-
-			    next($row);
-			    $y = $y + 1;
-		    }
-		    echo '</tr>';
-		    $i = $i + 1;
-        }
-    ?>
