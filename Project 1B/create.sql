@@ -1,0 +1,67 @@
+DROP TABLE IF EXISTS Movie;
+CREATE TABLE IF NOT EXISTS Movie (
+	id	INT NOT NULL,
+	title	VARCHAR(100),
+	year	INT,
+	rating	VARCHAR(10),
+	company	VARCHAR(50)
+);
+
+DROP TABLE IF EXISTS Actor;
+CREATE TABLE IF NOT EXISTS Actor (
+	id	INT NOT NULL,
+	last	VARCHAR(20),
+	first	VARCHAR(20),
+	sex	VARCHAR(6),
+	dob	DATE,
+	dod	DATE
+);
+
+
+DROP TABLE IF EXISTS Director;
+CREATE TABLE IF NOT EXISTS Director (
+	id	INT NOT NULL,
+	last	VARCHAR(20),
+	first	VARCHAR(20),
+	dob	DATE,
+	dod	DATE
+);
+
+DROP TABLE IF EXISTS MovieGenre;
+CREATE TABLE IF NOT EXISTS MovieGenre (
+	mid	INT NOT NULL,
+	genre	VARCHAR(20)
+);
+
+DROP TABLE IF EXISTS MovieDirector;
+CREATE TABLE IF NOT EXISTS MovieDirector (
+	mid	INT NOT NULL,
+	did	INT
+);
+
+DROP TABLE IF EXISTS MovieActor;
+CREATE TABLE IF NOT EXISTS MovieActor (
+	mid	INT NOT NULL,
+	aid	INT,
+	role	VARCHAR(50)
+);
+
+DROP TABLE IF EXISTS Review;
+CREATE TABLE IF NOT EXISTS Review (
+	name	VARCHAR(20),
+	time	TIMESTAMP,
+	mid	INT,
+	rating	INT,
+	comment	VARCHAR(500)
+);
+
+DROP TABLE IF EXISTS MaxPersonID;
+CREATE TABLE IF NOT EXISTS MaxPersonID (
+	id	INT
+);
+
+DROP TABLE IF EXISTS MaxMovieID;
+CREATE TABLE IF NOT EXISTS MaxMovieID (
+	id	INT
+);
+
