@@ -7,7 +7,10 @@ border: 1px solid black;
 }
 </style>
 
-<h1>Search Actors, Directors, anything Movie Related!</h1>
+<?php
+    echo '<h1>', $_GET["name"], '</h1>';
+?>
+
 <br /><br />
 
 <?php
@@ -20,10 +23,7 @@ border: 1px solid black;
 
 	$actor_id=$_GET["id"];
 
-    //Query will take actor id and output the movie title and the role that that actor played
-    $query = "SELECT movie.title as Title, movie_actor.role as Role FROM Movie movie, MovieActor movie_actor WHERE " . 'movie_actor.aid=' . $actor_id . ';';
-
-    printf($query);
+    $query = "SELECT DISTINCT mid, title, role, year FROM Movie, MovieActor WHERE aid = $actor_id AND mid = id ORDER BY year;";
 
 	if($result = $db->query($query)) {
 		$finfo = $result->fetch_fields();
@@ -41,6 +41,9 @@ border: 1px solid black;
 		echo '<tr>';
 
 		foreach ($column_names as $c) {
+            if($c == "mid") {
+                continue;
+            }
 			 echo '<td>', $c, '</td>';
 		}
 		echo '</tr>';
@@ -48,20 +51,16 @@ border: 1px solid black;
 		//rows
 		while ($row = $result->fetch_assoc()) {
 			echo '<tr>';
-            $actor_name = '';
-            $id = 0;
+            $movie_name = '';
+            $mid = 0;
 			foreach ($column_names as $c) {
-                if($c == "last") {
-                    $actor_name .= $row[$c];
+                if($c == "mid") {
+                    $mid = $row[$c];
                     continue;
                 }
-                if($c == "id") {
-                    $id = $row[$c];
-                    continue;
-                }
-                if($c == "first") {
-                    $actor_name = $row[$c] . ' ' . $actor_name;
-                    echo '<td><a href="show_actor.php?id=' . $id . '">', $actor_name, '</a></td>';
+                if($c == "title") {
+                    $movie_name = $row[$c];
+                    echo '<td><a href="show_movie.php?mid=' , $mid , '&name=' , $movie_name , '">', $movie_name, '</a></td>';
                 }
                 else {
 				    if($row[$c]) {

@@ -94,7 +94,7 @@ border: 1px solid black;
                 }
                 if($c == "first") {
                     $actor_name = $row[$c] . ' ' . $actor_name;
-                    echo '<td><a href="show_actor.php?id=' . $id . '">', $actor_name, '</a></td>';
+                    echo '<td><a href="show_actor.php?id=' , $id , '&name=' , $actor_name , '">', $actor_name, '</a></td>';
                 }
                 else {
 				    if($row[$c]) {
