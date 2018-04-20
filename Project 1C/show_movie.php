@@ -1,10 +1,13 @@
 <html>
-<head><title>Homepage</title></head>
+<head>
+    <title>About Movie</title>
+    <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- Bootstrap -->
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+</head>
 <body>
-	<style>
-table, td {
-border: 1px solid black;
-}
 </style>
 
 <?php
@@ -38,7 +41,7 @@ border: 1px solid black;
         }
 
 		//start table
-		echo '<table>';
+		echo '<table class="table table-bordered" style="width:90%; margin-left:5%;">';
 
 		//column names (first row)
 		echo '<tr>';
@@ -97,7 +100,7 @@ border: 1px solid black;
         }
 
 		//start table
-		echo '<table>';
+		echo '<table class="table table-bordered" style="width:90%; margin-left:5%;">';
 
 		//column names (first row)
 		echo '<tr>';
@@ -152,7 +155,7 @@ border: 1px solid black;
         }
 
 		//start table
-		echo '<table>';
+		echo '<table class="table table-bordered" style="width:90%; margin-left:5%;">';
 
 		//column names (first row)
 		echo '<tr>';

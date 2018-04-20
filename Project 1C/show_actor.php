@@ -1,11 +1,13 @@
 <html>
-<head><title>Homepage</title></head>
+<head>
+    <title>Homepage</title>
+    <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- Bootstrap -->
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+    </head>
 <body>
-	<style>
-table, td {
-border: 1px solid black;
-}
-</style>
 
 <?php
     echo '<h1>', $_GET["name"], '</h1>';
@@ -23,7 +25,7 @@ border: 1px solid black;
 
 	$actor_id=$_GET["id"];
 
-    $query = "SELECT DISTINCT mid, title, role, year FROM Movie, MovieActor WHERE aid = $actor_id AND mid = id ORDER BY year;";
+    $query = "SELECT DISTINCT mid, title as Movie, role as Role, year as Year FROM Movie, MovieActor WHERE aid = $actor_id AND mid = id ORDER BY year;";
 
 	if($result = $db->query($query)) {
 		$finfo = $result->fetch_fields();
@@ -35,7 +37,7 @@ border: 1px solid black;
         }
 
 		//start table
-		echo '<table>';
+		echo '<table class="table table-hover table-bordered" style="width:90%; margin-left:5%;">';
 
 		//column names (first row)
 		echo '<tr>';
@@ -58,7 +60,7 @@ border: 1px solid black;
                     $mid = $row[$c];
                     continue;
                 }
-                if($c == "title") {
+                if($c == "Movie") {
                     $movie_name = $row[$c];
                     echo '<td><a href="show_movie.php?mid=' , $mid , '&name=' , $movie_name , '">', $movie_name, '</a></td>';
                 }

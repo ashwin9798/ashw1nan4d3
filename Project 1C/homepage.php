@@ -1,5 +1,12 @@
 <html>
-<head><title>Homepage</title></head>
+<head>
+    <title>Homepage</title>
+    <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- Bootstrap -->
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+</head>
 <body>
 	<style>
 table, td {
@@ -11,7 +18,7 @@ border: 1px solid black;
 <br /><br />
 <p>
 	<form action="homepage.php" method="GET">
-		<textarea name="query" cols="60" rows="1"><?php echo htmlspecialchars($_GET['query']);?></textarea>
+		<input type="text" name="query"><?php ($_GET['query']);?></input>
 		<input type="submit" value="Submit" />
 	</form>
 </p>
@@ -60,7 +67,7 @@ border: 1px solid black;
         }
 
 		//start table
-		echo '<table>';
+		echo '<table class="table table-bordered" style="width:90%; margin-left:5%;">';
 
 		//column names (first row)
 		echo '<tr>';
@@ -116,6 +123,8 @@ border: 1px solid black;
 
     echo '</br>';
 
+    //TODO: Make movie titles link to the show_movie.php page
+
     printf("MOVIES:");
 
 	if($result = $db->query($movie_query)) {
@@ -128,25 +137,40 @@ border: 1px solid black;
         }
 
 		//start table
-		echo '<table>';
+		echo '<table class="table table-bordered" style="width:90%; margin-left:5%;">';
 
 		//column names (first row)
 		echo '<tr>';
 		foreach ($column_names as $c) {
-			echo '<td>', $c, '</td>';
+            if($c == "id") {
+                continue;
+            }
+			 echo '<td>', $c, '</td>';
 		}
 		echo '</tr>';
 
 		//rows
 		while ($row = $result->fetch_assoc()) {
 			echo '<tr>';
+            $movie_name = '';
+            $mid = 0;
 			foreach ($column_names as $c) {
-				if($row[$c]) {
-					echo '<td>', $row[$c], '</td>';
-				}
-				else {
-					echo '<td>', 'N/A', '</td>';
-				}
+                if($c == "id") {
+                    $mid = $row[$c];
+                    continue;
+                }
+                if($c == "title") {
+                    $movie_name = $row[$c];
+                    echo '<td><a href="show_movie.php?mid=' , $mid , '&name=' , $movie_name , '">', $movie_name, '</a></td>';
+                }
+                else {
+				    if($row[$c]) {
+					    echo '<td>', $row[$c], '</td>';
+                    }
+				    else {
+					    echo '<td>', 'N/A', '</td>';
+				    }
+                }
 	        }
 			echo '</tr>';
     	}
