@@ -23,10 +23,16 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
         echo "<h2> Result </h2>";
         echo "Expression is empty";
         return;
-    } elseif (preg_match('/((\-*)(\d+)([\+\-\*\/]*)+)/', $name_noSpace, $matches)==false) {
-        echo "<h2> Result </h2>";
-        echo "Invalid Expression!";
-        return;
+    } elseif (preg_match('/^(\-?)(((\-?)(\d+)(\.\d+)?)([\+\-\*\/]))+((\-?)(\d+)(\.\d+)?)$/', $name_noSpace, $matches)==false) {
+        if (preg_match('/^(\-?)((\d+)(\.\d+)?)$/', $name_noSpace, $matches)==false) {
+          echo "<h2> Result </h2>";
+          echo "Invalid Expression!";
+          return;
+        } else {
+          echo "<h2> Result </h2>";
+          echo "$name : $name_noSpace";
+          return;
+        }
     } elseif (strpos($name_noSpace, '/0')!==false){
       echo "<h2> Result </h2>";
       echo "Division by zero. Error!";
