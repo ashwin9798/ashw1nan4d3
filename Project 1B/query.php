@@ -9,7 +9,7 @@ border: 1px solid black;
 </style>
 
 <h1>Movie/Actor DB Query</h1>
-(Project 1B by Nathan Tung)<br /><br />
+<br /><br />
 Please type a MySQL SELECT Query into the box below:
 
 <p>
