@@ -14,14 +14,25 @@ border: 1px solid black;
 }
 </style>
 
-<h1>Search Actors, Directors, anything Movie Related!</h1>
+<nav class="navbar navbar-fixed-top navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">IMDB Clone</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li><a href="add_actor_director.php">Add Actor/Director</a></li>
+      <li><a href="add_movie.php">Add Movie Information</a></li>
+      <li><a href="add_actor_movie_relation.php">Add Movie/Actor Relation</a></li>
+      <li><a href="add_director_movie_relation.php">Add Movie/Director Relation</a></li>
+      <li><form action="homepage.php" method="GET" style="margin-top:10px;">
+  		<input type="text" name="query" style="margin-left: 50px; width: 300px"><?php ($_GET['query']);?></input>
+  		<input type="submit" value="Search" /></form></li>
+    </ul>
+  </div>
+</nav>
+
 <br /><br />
-<p>
-	<form action="homepage.php" method="GET">
-		<input type="text" name="query"><?php ($_GET['query']);?></input>
-		<input type="submit" value="Submit" />
-	</form>
-</p>
+<br /><br />
 
 <?php
 
@@ -55,130 +66,144 @@ border: 1px solid black;
     $actor_query .= '%%' . '\';';
     $movie_query .= '%%' . '\';';
 
-    printf("ACTORS:");
+	if($user_input != '' && $result = $db->query($actor_query)) {
+        if($result->num_rows > 0) {
+            echo '<h1 style="margin-left:5%;"> Actors </h1>';
 
-	if($result = $db->query($actor_query)) {
-		$finfo = $result->fetch_fields();
-		$row_cnt = $result->num_rows;
-		$column_names= array();
+    		$finfo = $result->fetch_fields();
+    		$row_cnt = $result->num_rows;
+    		$column_names= array();
 
-		foreach ($finfo as $val) {
-            $column_names[] = $val->name;
-        }
-
-		//start table
-		echo '<table class="table table-bordered" style="width:90%; margin-left:5%;">';
-
-		//column names (first row)
-		echo '<tr>';
-
-		foreach ($column_names as $c) {
-            if($c == "last" || $c == "id") {
-                continue;
+    		foreach ($finfo as $val) {
+                $column_names[] = $val->name;
             }
-            if($c == "first") {
-                echo '<td> Name', '</td>';
-            }
-            else {
-			    echo '<td>', $c, '</td>';
-            }
-		}
-		echo '</tr>';
 
-		//rows
-		while ($row = $result->fetch_assoc()) {
-			echo '<tr>';
-            $actor_name = '';
-            $id = 0;
-			foreach ($column_names as $c) {
-                if($c == "last") {
-                    $actor_name .= $row[$c];
-                    continue;
-                }
-                if($c == "id") {
-                    $id = $row[$c];
+    		//start table
+    		echo '<table class="table table-hover table-bordered" style="width:90%; margin-left:5%;">';
+
+    		//column names (first row)
+    		echo '<tr>';
+
+    		foreach ($column_names as $c) {
+                if($c == "last" || $c == "id" || $c == "sex") {
                     continue;
                 }
                 if($c == "first") {
-                    $actor_name = $row[$c] . ' ' . $actor_name;
-                    echo '<td><a href="show_actor.php?id=' , $id , '&name=' , $actor_name , '">', $actor_name, '</a></td>';
+                    echo '<td> Name', '</td>';
+                }
+                else if($c == "dob") {
+                    echo '<td>', 'Born', '</td>';
+                }
+                else if($c == "dod") {
+                    echo '<td>', 'Died', '</td>';
                 }
                 else {
-				    if($row[$c]) {
-					    echo '<td>', $row[$c], '</td>';
-                    }
-				    else {
-					    echo '<td>', 'N/A', '</td>';
-				    }
+    			    echo '<td>', $c, '</td>';
                 }
-	        }
-			echo '</tr>';
-    	}
-		echo '</table>';
-        $result->free();
+    		}
+    		echo '</tr>';
+
+    		//rows
+    		while ($row = $result->fetch_assoc()) {
+    			echo '<tr>';
+                $actor_name = '';
+                $id = 0;
+    			foreach ($column_names as $c) {
+                    if($c == "last") {
+                        $actor_name .= $row[$c];
+                        continue;
+                    }
+                    if($c == "id") {
+                        $id = $row[$c];
+                        continue;
+                    }
+                    if($c == "sex") {
+                        continue;
+                    }
+                    if($c == "first") {
+                        $actor_name = $row[$c] . ' ' . $actor_name;
+                        echo '<td><a href="show_actor.php?id=' , $id , '&name=' , $actor_name , '">', $actor_name, '</a></td>';
+                    }
+                    else {
+    				    if($row[$c]) {
+    					    echo '<td>', $row[$c], '</td>';
+                        }
+    				    else {
+    					    echo '<td>', '-', '</td>';
+    				    }
+                    }
+    	        }
+    			echo '</tr>';
+        	}
+    		echo '</table>';
+            $result->free();
+        }
 	}
-    else {
-        printf("Couldn't do this for some reason");
-    }
 
     echo '</br>';
 
     //TODO: Make movie titles link to the show_movie.php page
 
-    printf("MOVIES:");
+	if($user_input != '' && $result = $db->query($movie_query)) {
+        if($result->num_rows > 0) {
+            echo '<h1 style="margin-left:5%;"> Movies  </h1>';
+    		$finfo = $result->fetch_fields();
+    		$row_cnt = $result->num_rows;
+    		$column_names= array();
 
-	if($result = $db->query($movie_query)) {
-		$finfo = $result->fetch_fields();
-		$row_cnt = $result->num_rows;
-		$column_names= array();
-
-		foreach ($finfo as $val) {
-            $column_names[] = $val->name;
-        }
-
-		//start table
-		echo '<table class="table table-bordered" style="width:90%; margin-left:5%;">';
-
-		//column names (first row)
-		echo '<tr>';
-		foreach ($column_names as $c) {
-            if($c == "id") {
-                continue;
+    		foreach ($finfo as $val) {
+                $column_names[] = $val->name;
             }
-			 echo '<td>', $c, '</td>';
-		}
-		echo '</tr>';
 
-		//rows
-		while ($row = $result->fetch_assoc()) {
-			echo '<tr>';
-            $movie_name = '';
-            $mid = 0;
-			foreach ($column_names as $c) {
+    		//start table
+    		echo '<table class="table table-hover table-bordered" style="width:90%; margin-left:5%;">';
+
+    		//column names (first row)
+    		echo '<tr>';
+    		foreach ($column_names as $c) {
                 if($c == "id") {
-                    $mid = $row[$c];
                     continue;
                 }
-                if($c == "title") {
-                    $movie_name = $row[$c];
-                    echo '<td><a href="show_movie.php?mid=' , $mid , '&name=' , $movie_name , '">', $movie_name, '</a></td>';
+                if($c == "sex") {
+                    continue;
                 }
                 else {
-				    if($row[$c]) {
-					    echo '<td>', $row[$c], '</td>';
-                    }
-				    else {
-					    echo '<td>', 'N/A', '</td>';
-				    }
+                    echo '<td>', $c, '</td>';
                 }
-	        }
-			echo '</tr>';
-    	}
-		echo '</table>';
-        $result->free();
+    		}
+    		echo '</tr>';
+
+    		//rows
+    		while ($row = $result->fetch_assoc()) {
+    			echo '<tr>';
+                $movie_name = '';
+                $mid = 0;
+    			foreach ($column_names as $c) {
+                    if($c == "id") {
+                        $mid = $row[$c];
+                        continue;
+                    }
+                    if($c == "title") {
+                        $movie_name = $row[$c];
+                        echo '<td><a href="show_movie.php?mid=' , $mid , '&name=' , $movie_name , '">', $movie_name, '</a></td>';
+                    }
+                    else {
+    				    if($row[$c]) {
+    					    echo '<td>', $row[$c], '</td>';
+                        }
+    				    else {
+    					    echo '<td>', 'N/A', '</td>';
+    				    }
+                    }
+    	        }
+    			echo '</tr>';
+        	}
+    		echo '</table>';
+            $result->free();
+        }
 	}
-    else {
-        printf("Couldn't do this for some reason");
+    if($user_input == '') {
+        echo '<h1 style="margin-left:5%;"> Search for a Movie or Actor in the search bar above! </h1>';
     }
 	$db->close();
 ?>

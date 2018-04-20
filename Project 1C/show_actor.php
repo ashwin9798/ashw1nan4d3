@@ -9,6 +9,23 @@
     </head>
 <body>
 
+    <nav class="navbar navbar-fixed-top navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">IMDB Clone</a>
+        </div>
+        <ul class="nav navbar-nav">
+          <li><a href="add_actor_director.php">Add Actor/Director</a></li>
+          <li><a href="add_movie.php">Add Movie Information</a></li>
+          <li><a href="add_actor_movie_relation.php">Add Movie/Actor Relation</a></li>
+          <li><a href="add_director_movie_relation.php">Add Movie/Director Relation</a></li>
+          <li><form action="homepage.php" method="GET" style="margin-top:10px;">
+      		<input type="text" name="query" style="margin-left: 50px; width: 300px"><?php ($_GET['query']);?></input>
+      		<input type="submit" value="Search" /></form></li>
+        </ul>
+      </div>
+    </nav>
+
 <?php
     echo '<h1>', $_GET["name"], '</h1>';
 ?>
