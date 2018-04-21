@@ -1,4 +1,3 @@
-
 <html>
 <head><title>Movie/Actor Database Query</title></head>
 <body>
@@ -11,7 +10,6 @@ border: 1px solid black;
 <h1>Movie/Actor DB Query</h1>
 <br /><br />
 Please type a MySQL SELECT Query into the box below:
-
 <p>
 	<form action="query.php" method="GET">
 		<textarea name="query" cols="60" rows="8"><?php echo htmlspecialchars($_GET['query']);?></textarea>
@@ -19,7 +17,7 @@ Please type a MySQL SELECT Query into the box below:
 	</form>
 </p>
 
-<p><small>Note: tables and fields are case sensitive. Run "show tables" to see the list of available tables.</small></p>
+<p><small> Run "show tables" to see the list of available tables.</small></p>
 
 <?php
 
@@ -65,7 +63,7 @@ Please type a MySQL SELECT Query into the box below:
 		echo '</table>';
         $result->free();
 	}
-	else {
+	else if($user_query != '') {
 		printf("INVALID QUERY");
 	}
 	$db->close();
