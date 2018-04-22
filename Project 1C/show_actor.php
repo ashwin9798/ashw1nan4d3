@@ -9,10 +9,11 @@
     </head>
 <body>
 
+<br /><br /><br />
     <nav class="navbar navbar-fixed-top navbar-default">
       <div class="container-fluid">
         <div class="navbar-header">
-          <a class="navbar-brand" href="#">IMDB Clone</a>
+          <a class="navbar-brand" href="homepage.php">IMDB Clone</a>
         </div>
         <ul class="nav navbar-nav">
           <li><a href="add_actor_director.php">Add Actor/Director</a></li>
@@ -26,11 +27,13 @@
       </div>
     </nav>
 
+
 <?php
-    echo '<h1>', $_GET["name"], '</h1>';
+    $actor_name = $_GET["name"];
+    echo '<h1 style="margin-left: 3%;">', $actor_name, '</h1>';
+    echo '<hr style="width:95%;">';
 ?>
 
-<br /><br />
 
 <?php
 
@@ -42,7 +45,30 @@
 
 	$actor_id=$_GET["id"];
 
+    $actor_info = "SELECT * from Actor WHERE id=$actor_id";
     $query = "SELECT DISTINCT mid, title as Movie, role as Role, year as Year FROM Movie, MovieActor WHERE aid = $actor_id AND mid = id ORDER BY year;";
+
+
+    if($result = $db->query($actor_info)) {
+        while ($row = $result->fetch_assoc()) {
+            $dob = $row['dob'];
+            $dod = $row['dod'];
+    	}
+        echo '<p style="margin-left: 5%;"> Born: ', $dob, '</p>';
+        if($dod == '') {
+            echo '<p style="margin-left: 5%;"> Died:     - </p>';
+        }
+        else {
+            echo '<p style="margin-left: 5%;"> Died: ', $dod, '</p>';
+        }
+        $result->free();
+	}
+    else {
+        printf("Couldn't do this for some reason");
+    }
+
+    echo '<hr style="width:90%;">';
+    echo '<h3 style="margin-left: 5%"> Movie Roles</h3>';
 
 	if($result = $db->query($query)) {
 		$finfo = $result->fetch_fields();
@@ -98,6 +124,7 @@
     else {
         printf("Couldn't do this for some reason");
     }
+
 	$db->close();
 ?>
 </body>

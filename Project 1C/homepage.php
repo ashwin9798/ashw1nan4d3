@@ -17,7 +17,7 @@ border: 1px solid black;
 <nav class="navbar navbar-fixed-top navbar-default">
   <div class="container-fluid">
     <div class="navbar-header">
-      <a class="navbar-brand" href="#">IMDB Clone</a>
+      <a class="navbar-brand" href="homepage.php">IMDB Clone</a>
     </div>
     <ul class="nav navbar-nav">
       <li><a href="add_actor_director.php">Add Actor/Director</a></li>
@@ -52,6 +52,9 @@ border: 1px solid black;
 
     $actor_query = "SELECT DISTINCT * FROM Actor WHERE " . 'upper(CONCAT(first, ' . '\'' . '\'' . ', last)) LIKE \'%%';
     $movie_query = "SELECT DISTINCT * FROM Movie WHERE " . 'upper(title) LIKE \'%%';
+
+    $q1 = false;
+    $q2 = false;
     //
     foreach ($query_array as $char) {
         if($char == ' ') {
@@ -68,6 +71,7 @@ border: 1px solid black;
 
 	if($user_input != '' && $result = $db->query($actor_query)) {
         if($result->num_rows > 0) {
+            $q1 = true;
             echo '<h1 style="margin-left:5%;"> Actors </h1>';
 
     		$finfo = $result->fetch_fields();
@@ -85,10 +89,13 @@ border: 1px solid black;
     		echo '<tr>';
 
     		foreach ($column_names as $c) {
-                if($c == "last" || $c == "id" || $c == "sex") {
+                if($c == "last" || $c == "id") {
                     continue;
                 }
-                if($c == "first") {
+                else if($c == "sex") {
+                    echo '<td>Sex</td>';
+                }
+                else if($c == "first") {
                     echo '<td> Name', '</td>';
                 }
                 else if($c == "dob") {
@@ -117,9 +124,9 @@ border: 1px solid black;
                         $id = $row[$c];
                         continue;
                     }
-                    if($c == "sex") {
-                        continue;
-                    }
+                    // if($c == "sex") {
+                    //     continue;
+                    // }
                     if($c == "first") {
                         $actor_name = $row[$c] . ' ' . $actor_name;
                         echo '<td><a href="show_actor.php?id=' , $id , '&name=' , $actor_name , '">', $actor_name, '</a></td>';
@@ -142,10 +149,9 @@ border: 1px solid black;
 
     echo '</br>';
 
-    //TODO: Make movie titles link to the show_movie.php page
-
 	if($user_input != '' && $result = $db->query($movie_query)) {
         if($result->num_rows > 0) {
+            $q2 = true;
             echo '<h1 style="margin-left:5%;"> Movies  </h1>';
     		$finfo = $result->fetch_fields();
     		$row_cnt = $result->num_rows;
@@ -202,9 +208,16 @@ border: 1px solid black;
             $result->free();
         }
 	}
+
     if($user_input == '') {
         echo '<h1 style="margin-left:5%;"> Search for a Movie or Actor in the search bar above! </h1>';
     }
+    else {
+        if(!$q1 && !$q2) {
+            echo '<h1 style="margin-left:5%;"> Uh oh, we could not find that movie/actor in our database, try again! </h1>';
+        }
+    }
+
 	$db->close();
 ?>
 </body>

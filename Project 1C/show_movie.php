@@ -10,11 +10,32 @@
 <body>
 </style>
 
-<?php
-    echo '<h1>', $_GET["name"], '</h1>';
-?>
-
 <br /><br />
+
+
+    <nav class="navbar navbar-fixed-top navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="homepage.php">IMDB Clone</a>
+        </div>
+        <ul class="nav navbar-nav">
+          <li><a href="add_actor_director.php">Add Actor/Director</a></li>
+          <li><a href="add_movie.php">Add Movie Information</a></li>
+          <li><a href="add_actor_movie_relation.php">Add Movie/Actor Relation</a></li>
+          <li><a href="add_director_movie_relation.php">Add Movie/Director Relation</a></li>
+          <li><form action="homepage.php" method="GET" style="margin-top:10px;">
+      		<input type="text" name="query" style="margin-left: 50px; width: 300px"><?php ($_GET['query']);?></input>
+      		<input type="submit" value="Search" /></form></li>
+        </ul>
+      </div>
+    </nav>
+</br>
+
+    <?php
+        echo '<h1 style="margin-left: 3%;">', $_GET["name"], '</h1>';
+        echo '<hr style="width:95%;">';
+    ?>
+
 
 <?php
 
@@ -28,9 +49,9 @@
 
     $movie_info_query = 'SELECT DISTINCT year, rating, company FROM Movie WHERE id= ' . $mid . ';';
     $director_query = "SELECT first, last, dob FROM MovieDirector, Director WHERE mid = $mid AND did = id ORDER BY first;";
+    $genre_query = "SELECT genre from MovieGenre WHERE mid=$mid";
     $actors_query = "SELECT id, first, last, dob, role FROM Actor, MovieActor WHERE mid = $mid AND aid = id;";
 
-    printf("Movie Info:");
 	if($result = $db->query($movie_info_query)) {
 		$finfo = $result->fetch_fields();
 		$row_cnt = $result->num_rows;
@@ -42,53 +63,30 @@
 
 		//start table
 		echo '<table class="table table-bordered" style="width:90%; margin-left:5%;">';
-
-		//column names (first row)
-		echo '<tr>';
-
-		foreach ($column_names as $c) {
-            if($c == "mid") {
-                continue;
-            }
-			 echo '<td>', $c, '</td>';
-		}
-		echo '</tr>';
-
 		//rows
 		while ($row = $result->fetch_assoc()) {
-			echo '<tr>';
             $actor_name = '';
             $mid = 0;
 			foreach ($column_names as $c) {
-                if($c == "mid") {
-                    $mid = $row[$c];
+                if($c == "year") {
+                    echo '<p style="margin-left: 5%;"> Year Released: ', $row[$c], '</p>';
                     continue;
                 }
-                if($c == "title") {
-                    $actor_name = $row[$c] . ' ' . $actor_name;
-                    echo '<td><a href="show_movie.php?mid=' . $mid . '">', $actor_name, '</a></td>';
+                if($c == "rating") {
+                    echo '<p style="margin-left: 5%;"> MPAA Rating: ', $row[$c], '</p>';
+                    continue;
                 }
-                else {
-				    if($row[$c]) {
-					    echo '<td>', $row[$c], '</td>';
-                    }
-				    else {
-					    echo '<td>', 'N/A', '</td>';
-				    }
+                if($c == "company") {
+                    echo '<p style="margin-left: 5%;"> Producer: ', $row[$c], '</p>';
+                    continue;
                 }
 	        }
-			echo '</tr>';
     	}
-		echo '</table>';
         $result->free();
 	}
     else {
         printf("Couldn't do this for some reason");
     }
-
-    echo '</br>';
-
-    printf("Director:");
 
     if($result = $db->query($director_query)) {
 		$finfo = $result->fetch_fields();
@@ -98,52 +96,46 @@
 		foreach ($finfo as $val) {
             $column_names[] = $val->name;
         }
-
-		//start table
-		echo '<table class="table table-bordered" style="width:90%; margin-left:5%;">';
-
-		//column names (first row)
-		echo '<tr>';
-
-		foreach ($column_names as $c) {
-            if($c == "mid") {
-                continue;
-            }
-			 echo '<td>', $c, '</td>';
-		}
-		echo '</tr>';
-
 		//rows
 		while ($row = $result->fetch_assoc()) {
-			echo '<tr>';
-            $actor_name = '';
-            $mid = 0;
+            $director_name = '';
+            $director_dob = '';
 			foreach ($column_names as $c) {
-                if($c == "mid") {
-                    $mid = $row[$c];
+                if($c == "first") {
+                    $director_name .= $row[$c] . ' ';
                     continue;
                 }
-                if($c == "title") {
-                    $actor_name = $row[$c] . ' ' . $actor_name;
-                    echo '<td><a href="show_movie.php?mid=' . $mid . '">', $actor_name, '</a></td>';
+                if($c == "last") {
+                    $director_name .= $row[$c];
+                    continue;
                 }
-                else {
-				    if($row[$c]) {
-					    echo '<td>', $row[$c], '</td>';
-                    }
-				    else {
-					    echo '<td>', 'N/A', '</td>';
-				    }
+                if($c == "dob") {
+                    $director_dob .= $row[$c];
+                    continue;
                 }
 	        }
-			echo '</tr>';
+			echo '<p style="margin-left: 5%;"> Directed by: ', $director_name, ' (', $director_dob, ')', '</p>';
     	}
-		echo '</table>';
         $result->free();
 	}
     else {
         printf("Couldn't do this for some reason");
     }
+
+    if($result = $db->query($genre_query)) {
+		while ($row = $result->fetch_assoc()) {
+            $genre = $row['genre'];
+    	}
+        echo '<p style="margin-left: 5%;"> Genre: ', $genre, '</p>';
+        $result->free();
+	}
+    else {
+        printf("Couldn't do this for some reason");
+    }
+
+
+    echo '<hr style="width:90%;">';
+    echo '<h3 style="margin-left: 5%">Actors in this Movie</h3>';
 
     if($result = $db->query($actors_query)) {
 		$finfo = $result->fetch_fields();
@@ -161,7 +153,7 @@
 		echo '<tr>';
 
 		foreach ($column_names as $c) {
-            if($c == "last" || $c == "id") {
+            if($c == "last" || $c == "id" || $c == "dob") {
                 continue;
             }
             if($c == "first") {
@@ -179,6 +171,9 @@
             $actor_name = '';
             $mid = 0;
 			foreach ($column_names as $c) {
+                if($c == "dob") {
+                    continue;
+                }
                 if($c == "first") {
                     $actor_name .= $row[$c];
                     continue;
@@ -208,6 +203,8 @@
     else {
         printf("Couldn't do this for some reason");
     }
+
+    //TODO: Comments, adding and viewing them
 
 	$db->close();
 ?>
