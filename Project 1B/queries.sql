@@ -6,5 +6,8 @@ SELECT COUNT(DISTINCT movie_actor.aid) as MultipleMovieActors
 FROM MovieActor movie_actor, MovieActor movie_actor2
 WHERE movie_actor.aid=movie_actor2.aid AND movie_actor.mid<>movie_actor2.mid;
 
---Still need to do one more query
---Explain Dinkar how first one works lol
+--All the movies with dead directors
+
+SELECT movie.title as Movies, CONCAT(director.first, ' ', director.last) as name
+FROM Movie movie, Director director, MovieDirector movie_director
+WHERE director.dod IS NOT NULL AND movie.id=movie_director.mid AND movie_director.did=director.id;

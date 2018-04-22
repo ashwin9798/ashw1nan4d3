@@ -44,16 +44,16 @@ INSERT INTO Movie VALUES(1, 'Movie-Test', 202020, 'R', 'Test');
 
 --Violating Check Constraint for Actor relation
 --dod can't be less than dob
-INSERT INTO Actor VALUES(2, 'Actor', 'Test', 'Male', 2090-12-11, 2000-12-11);
+INSERT INTO Actor VALUES(2, 'Actor', 'Test', 'Male', '2090-12-11', '2000-12-11');
 
 --Violating Check Constraint for Director relation
 --dod can't be less than dob
-INSERT INTO Director VALUES(2046, 'Director', 'Test', 2090-12-11, 2000-12-11);
+INSERT INTO Director VALUES(2046, 'Director', 'Test', '2090-12-11', '2000-12-11');
 
 --Violating Check Constraint for Actor relation
 --Sex must be either Male or Female
-INSERT INTO Actor VALUES(2, 'Actor', 'Test', 'Bogus', 2090-12-11, 2000-12-11);
+INSERT INTO Actor VALUES(2, 'Actor', 'Test', 'Bogus', '2090-12-11', '2000-12-11');
 
 --Violating Check Constraint for Review relation
 --Rating must be between 0 and 5
-INSERT INTO Review VALUES('Die Another Day', 2018-04-19 10:00:00, 119, 20, 'Pretty Good');
+INSERT INTO Review VALUES('Die Another Day', '2018-04-19 10:00:00', 119, 20, 'Pretty Good');
