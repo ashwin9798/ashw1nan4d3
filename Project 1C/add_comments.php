@@ -41,23 +41,29 @@ $movie_id = $_GET["id"];
     <?php
         $movie_name = $_GET["name"];
         $mid=$_GET["mid"];
-        echo '<h1 style="margin-left: 3%;"> Add Review for ', $movie_name, '</h1>';
+        echo '<h1 style="margin-left: 3%;"> Write a review for ', $movie_name, '</h1>';
         echo '<hr style="width:95%;">';
     ?>
 
     <form action="add_comments.php" method="GET" style="margin-top:10px;">
       <input type="hidden" name="mid" value="<?=$mid;?>" />
       <input type="hidden" name="name" value="<?=$movie_name;?>" />
-      <input type="text" name="username" style="margin-left: 50px; width: 300px">
-      <select class="form-control" name="score" id="rating">
+      <p style="margin-left: 5%"><b>Your name:<b></p>
+      <input type="text" name="username" style="margin-left: 5%; width: 20%">
+      </br></br>
+      <p style="margin-left: 5%"><b>Rating:<b></p>
+      <select class="form-control" name="score" id="rating" style="margin-left: 5%; width: 20%">
                             <option value="1">1</option>
                             <option value="2">2</option>
                             <option value="3">3</option>
                             <option value="4">4</option>
                             <option value="5">5</option>
     </select>
-      <textarea class="form-control" name="comment" rows="5" placeholder="no more than 500 characters"></textarea>
-      <input type="submit" value="add" /></form>
+    </br>
+    <p style="margin-left: 5%"><b>Comments:<b></p>
+      <textarea style="margin-left: 5%; width: 40%;" class="form-control" name="comment" rows="5" placeholder="no more than 500 characters"></textarea>
+</br>
+      <input style="margin-left: 5%" type="submit" value="Add Review!" /></form>
 
 <?php
 
@@ -69,16 +75,14 @@ $movie_id = $_GET["id"];
     $comment=$_GET["comment"];
     $username=$_GET["username"];
 
-    if($score && $comment && $username) {
+    if($score && $comment) {
+        if($username == '') {
+            $username = "Anonymous";
+        }
         $add_comment_query = "INSERT INTO Review (name, time, mid, rating, comment) VALUES('$username', now(), '$mid', '$score', '$comment')";
 
-        printf($add_comment_query);
-
         if($result = $db->query($add_comment_query)) {
-
-            printf("comment added!");
-            echo '<a href="show_movie.php?mid=', $mid, '&name=', $movie_name, '"> Head back to see your comment!</a>'; 
-
+            echo '<a href="show_movie.php?mid=', $mid, '&name=', $movie_name, '"> SUCCESS! Head back to see your comment!</a>';
         }
         else {
             printf("failed");
@@ -86,7 +90,9 @@ $movie_id = $_GET["id"];
 
     }
     else {
-        printf("your form isn't complete");
+        if(!$comment) {
+            echo '</br> <p> Your form seems incomplete </p>';
+        }
     }
 	$db->close();
 ?>
