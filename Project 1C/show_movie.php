@@ -32,7 +32,8 @@
 </br>
 
     <?php
-        echo '<h1 style="margin-left: 3%;">', $_GET["name"], '</h1>';
+        $movie_name = $_GET["name"];
+        echo '<h1 style="margin-left: 3%;">', $movie_name, '</h1>';
         echo '<hr style="width:95%;">';
     ?>
 
@@ -41,6 +42,7 @@
 
 	$db = new mysqli('localhost', 'cs143', '', 'TEST');
 
+    $movie_name = $_GET["name"];
 	if($db->connect_errno > 0){
     	die('Unable to connect to database [' . $db->connect_error . ']');
 	}
@@ -51,6 +53,8 @@
     $director_query = "SELECT first, last, dob FROM MovieDirector, Director WHERE mid = $mid AND did = id ORDER BY first;";
     $genre_query = "SELECT genre from MovieGenre WHERE mid=$mid";
     $actors_query = "SELECT id, first, last, dob, role FROM Actor, MovieActor WHERE mid = $mid AND aid = id;";
+    $reviews_query = "SELECT name, time, rating, comment FROM Review WHERE mid=$mid ORDER BY time DESC";
+    $average_score = "SELECT AVG(rating), COUNT(rating) FROM Review WHERE mid=$mid";
 
 	if($result = $db->query($movie_info_query)) {
 		$finfo = $result->fetch_fields();
@@ -65,8 +69,6 @@
 		echo '<table class="table table-bordered" style="width:90%; margin-left:5%;">';
 		//rows
 		while ($row = $result->fetch_assoc()) {
-            $actor_name = '';
-            $mid = 0;
 			foreach ($column_names as $c) {
                 if($c == "year") {
                     echo '<p style="margin-left: 5%;"> Year Released: ', $row[$c], '</p>';
@@ -169,7 +171,6 @@
 		while ($row = $result->fetch_assoc()) {
 			echo '<tr>';
             $actor_name = '';
-            $mid = 0;
 			foreach ($column_names as $c) {
                 if($c == "dob") {
                     continue;
@@ -206,7 +207,53 @@
 
     //TODO: Comments, adding and viewing them
 
-	$db->close();
+    if($result = $db->query($average_score)) {
+        while ($row = $result->fetch_assoc()) {
+            $avg = $row["AVG(rating)"];
+            $num_reviews = $row["COUNT(rating)"];
+        }
+        echo '<hr style="width:90%;">';
+        echo '<h3 style="margin-left: 5%">User Reviews</h3>';
+        if($num_reviews == 0) {
+            echo '<p style="margin-left: 5%"> No reviews yet </p>';
+        }
+        else {
+            echo '<p style="margin-left: 5%"> This movie has an average score of ', '<span style="color: #ff0000"><b>', $avg,'</b></span>', ' based on ', $num_reviews,  ' reviews</p>';
+        }
+    }
+
+    if($result = $db->query($reviews_query)) {
+        $finfo = $result->fetch_fields();
+        $column_names= array();
+
+        foreach ($finfo as $val) {
+            $column_names[] = $val->name;
+        }
+
+        //rows
+        while ($row = $result->fetch_assoc()) {
+            $username = $row["name"];
+            $comment_time = $row["time"];
+            $rating = $row["rating"];
+            $review = $row["comment"];
+
+            echo '<div style="width: 90%; margin-top: 0.5%; margin-left: 5%; border:1px solid grey"><p style="margin-left: 1%"><span style="color: #ff0000"><b>', $username, '</b></span>', ' rated this movie ', $comment_time, ':</p><p style="margin-left: 3%">', $review, '</p><p style="margin-left: 1%"> Score: ', $rating, '/5 stars</p></div>';
+
+        }
+        echo '</table>';
+        $result->free();
+    }
+    else {
+        printf("Couldn't do this for some reason");
+    }
+    $db
 ?>
+
+<form action="add_comments.php" method="GET" style="margin-top:10px;">
+  <input type="hidden" name="mid" value="<?=$mid;?>" />
+  <input type="hidden" name="name" value="<?=$movie_name;?>" />
+  <input style="margin-left: 5%;" type="submit" value="Add Review" />
+</form>
+
 </body>
 </html>
