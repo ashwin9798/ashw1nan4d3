@@ -27,7 +27,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li><form action="homepage.php" method="GET" style="margin-top:10px;">
-    		<input type="text" name="query" id="search-box"><?php if (isset($_GET['query'])){};?></input>
+    		<input type="text" name="query" id="search-box" class="search-box"><?php if (isset($_GET['query'])){};?></input>
     		<input type="submit" value="Search" style="margin-right: 15px;"/></form></li>
       </ul>
     </div>

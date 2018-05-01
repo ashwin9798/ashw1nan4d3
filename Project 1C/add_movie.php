@@ -11,6 +11,10 @@
         <script src="js/jquery.min.js"></script>
         <script type="text/javascript" src="js/bootstrap.min.js"></script>
 
+        <link href="css/boot-select.min.css" rel="stylesheet">
+        <script type="text/javascript" src="js/boot-select.min.js"></script>
+
+
 </head>
 <body>
 
@@ -78,36 +82,28 @@
       </div>
       <br/>
       <div class="genre">
-        <div class="btn-group">
-          <button type="button" class="btn btn-default dropdown-toggle" name="genre" id="genre-tag" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"> Genre <span class="caret"></span> </button>
-          <script>
-            function changeGenre(genre) {
-              document.getElementById("genre-tag").innerHTML = genre + " <span class=\"caret\">";
-            }
-          </script>
-          <ul class="dropdown-menu" id="genre-ul">
-            <li><a onclick='changeGenre("Action")'>Action</a></li>
-            <li><a onclick='changeGenre("Adult")'>Adult</a></li>
-            <li><a onclick='changeGenre("Adventure")'>Adventure</a></li>
-            <li><a onclick='changeGenre("Animation")'>Animation</a></li>
-            <li><a onclick='changeGenre("Comedy")'>Comedy</a></li>
-            <li><a onclick='changeGenre("Crime")'>Crime</a></li>
-            <li><a onclick='changeGenre("Documentary")'>Documentary</a></li>
-            <li><a onclick='changeGenre("Drama")'>Drama</a></li>
-            <li><a onclick='changeGenre("Family")'>Family</a></li>
-            <li><a onclick='changeGenre("Fantasy")'>Fantasy</a></li>
-            <li><a onclick='changeGenre("Horror")'>Horror</a></li>
-            <li><a onclick='changeGenre("Musical")'>Musical</a></li>
-            <li><a onclick='changeGenre("Mystery")'>Mystery</a></li>
-            <li><a onclick='changeGenre("Romance")'>Romance</a></li>
-            <li><a onclick='changeGenre("Sci-Fi")'>Sci-Fi</a></li>
-            <li><a onclick='changeGenre("Short")'>Short</a></li>
-            <li><a onclick='changeGenre("Thriller")'>Thriller</a></li>
-            <li><a onclick='changeGenre("War")'>War</a></li>
-            <li><a onclick='changeGenre("Western")'>Western</a></li>
-          </ul>
-        </div>
-        <input type="text" id="genre-input" name="genre" aria-describedby="basic-addon1" style="display: none;">
+        <select class="selectpicker" multiple data-selected-text-format="count" onchange="changeGenres()" id="genre">
+          <option>Action</option>
+          <option>Adult</option>
+          <option>Adventure</option>
+          <option>Animation</option>
+          <option>Comedy</option>
+          <option>Crime</option>
+          <option>Documentary</option>
+          <option>Drama</option>
+          <option>Family</option>
+          <option>Fantasy</option>
+          <option>Horror</option>
+          <option>Musical</option>
+          <option>Mystery</option>
+          <option>Romance</option>
+          <option>Sci-Fi</option>
+          <option>Short</option>
+          <option>Thriller</option>
+          <option>War</option>
+          <option>Western</option>
+        </select>
+        <input type="text" id="genre-input" name="genre" aria-describedby="basic-addon1">
       </div>
       <br/>
       <br/>
@@ -128,11 +124,16 @@
     var target = getEventTarget(event);
     document.getElementById("rating-input").value = target.innerHTML;
   };
-  var ul2 = document.getElementById("genre-ul");
-  ul2.onclick = function(event) {
-    var target = getEventTarget(event);
-    document.getElementById("genre-input").value = target.innerHTML;
-  };
+
+  function changeGenres() {
+    var genres_list= $('.selectpicker').val()
+    var text = document.getElementById('genre-input');
+    text.value= "";
+    for (i = 0; i < genres_list.length; i++) {
+      text.value += genres_list[i] + " ";
+    }
+  }
+
 </script>
 
 <?php
@@ -141,10 +142,12 @@
     if($db->connect_errno > 0){
         die('Unable to connect to database [' . $db->connect_error . ']');
     }
-    $title=$_GET["title"];
-    $year=$_GET["year"];
-    $rating=$_GET["rating"];
-    $company=$_GET["company"];
+    $title = isset($_GET['title']) ? $_GET['title'] : '';
+    $year = isset($_GET['year']) ? $_GET['year'] : '';
+    $rating = isset($_GET['rating']) ? $_GET['rating'] : '';
+    $company = isset($_GET['company']) ? $_GET['company'] : '';
+    $genre = isset($_GET['genre']) ? $_GET['genre'] : '';
+    $genres_list=explode(' ',$genre);
 
     if ($title!='') {
 
@@ -166,16 +169,25 @@
       $curr_MaxID = $result["id"];
       $new_MaxID = intval($curr_MaxID + 1);
 
-
       $add_ad_query = "INSERT INTO Movie (id, title, year, rating, company) VALUES('$new_MaxID', '$title', '$year', '$rating', '$company')";
 
       if($db->query($add_ad_query)) {
-          echo "<span style=\"font-size: 18px; margin: 20%;\"class=\"label label-success\">Success: Movie Added</span>";
 
-          $sql = "UPDATE MaxMovieID SET id=" . $new_MaxID;
-          if ($db->query($sql) === FALSE) {
-            echo "<span style=\"font-size: 18px; margin: 20%;\"class=\"label label-danger\">Error: Max Movie ID not updated</span>";
+        $sql = "UPDATE MaxMovieID SET id=" . $new_MaxID;
+        if ($db->query($sql) === FALSE) {
+          echo "<span style=\"font-size: 18px; margin: 20%;\"class=\"label label-danger\">Error: Max Movie ID not updated</span>";
+        }
+
+        foreach ($genres_list as $g)
+        {
+          if ($g!='') {
+            $add_ad_query2 = "INSERT INTO MovieGenre (mid, genre) VALUES('$new_MaxID', '$g')";
+            if(!($db->query($add_ad_query2))) {
+              echo $db->error;
+            }
           }
+        }
+        echo "<span style=\"font-size: 18px; margin: 20%;\"class=\"label label-success\">Success: Movie Added</span>";
       }
     }
 	$db->close();

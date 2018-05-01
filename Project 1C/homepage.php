@@ -26,13 +26,16 @@ border: 1px solid black;
       <li><a href="add_actor_movie_relation.php">Add Movie/Actor Relation</a></li>
       <li><a href="add_director_movie_relation.php">Add Movie/Director Relation</a></li>
     </ul>
-    <ul class="nav navbar-nav navbar-right">
-      <li><form action="homepage.php" method="GET" style="margin-top:10px;">
-  		<input type="text" name="query" id="search-box"><?php if (isset($_GET['query'])){};?></input>
-  		<input type="submit" value="Search" style="margin-right: 15px;"/></form></li>
-    </ul>
   </div>
 </nav>
+
+<br /><br />
+<br /><br />
+
+<form id="search-form" action="homepage.php" method="GET">
+  <input type="text" name="query" id="search-box-big" placeholder="Search for Actor/Movie"><?php if (isset($_GET['query'])){};?></input>
+  <input type="submit" value="Search" id="home-search" style="margin-right: 15px;"/>
+</form>
 
 <br /><br />
 <br /><br />
@@ -213,7 +216,8 @@ border: 1px solid black;
 	}
 
   if($user_input == '') {
-      echo '<h1 style="margin-left:5%; color:#fff;"> Search for a Movie or Actor in the search bar above! </h1>';
+      // echo '<h1 style="margin-left:5%; color:#fff;"> Search for a Movie or Actor in the search bar above! </h1>';
+      echo '<marquee direction="right"> <h1 id="heading" style="margin-left:5%; color:#fff;"> Search for an Actor or Movie Above! </h1></marquee>';
   }
   else {
       if(!$q1 && !$q2) {

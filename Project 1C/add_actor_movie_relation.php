@@ -11,11 +11,19 @@
         <script src="js/jquery.min.js"></script>
         <script type="text/javascript" src="js/bootstrap.min.js"></script>
 
-        <link rel="stylesheet" href="css/b-select.min.css">
-        <script src="js/b-select.min.js"></script>
-
 </head>
 <body>
+
+  <?php
+  $conn = new mysqli('localhost', 'cs143', '', 'TEST');
+  if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+  }
+
+  $sql = "SELECT CONCAT(first, ' ', last) as name, id FROM Actor ORDER BY first";
+  global $result;
+  $result = $conn->query($sql);
+  ?>
 
   <nav class="navbar navbar-fixed-top navbar-inverse">
     <div class="container-fluid">
@@ -47,7 +55,7 @@
     <form action="add_actor_movie_relation.php" method="GET">
       <div class="title" style="display: flex; flex-flow: row;">
         <span class="input-group-addon" id="basic-addon1" style="width: 10%;">Movie Title: </span>
-        <select class="selectpicker" data-live-search="true" onchange="changeTitle()" id="title">
+        <select onchange="changeTitle()" id="title">
             <?php
               $conn = new mysqli('localhost', 'cs143', '', 'TEST');
               if ($conn->connect_error) {
@@ -55,10 +63,10 @@
               }
 
               $sql = "SELECT title, id FROM Movie ORDER BY title";
-              $result = $conn->query($sql);
+              $result2 = $conn->query($sql);
 
-              if ($result->num_rows > 0) {
-                while($row = $result->fetch_assoc()) {
+              if ($result2->num_rows > 0) {
+                while($row = $result2->fetch_assoc()) {
                   echo "<option value=" . $row["id"] . ">" . $row["title"] . "</option>";
                 }
               } else {
@@ -72,18 +80,13 @@
       <br/>
       <div class="actor" style="display: flex; flex-flow: row;">
         <span class="input-group-addon" id="basic-addon1" style="width: 6%;">Actor: </span>
-        <select class="selectpicker" data-live-search="true" onchange="changeActor()" id="actor">
+        <select onchange="changeActor()" id="actor">
             <?php
-              $conn = new mysqli('localhost', 'cs143', '', 'TEST');
-              if ($conn->connect_error) {
-                die("Connection failed: " . $conn->connect_error);
-              }
 
-              $sql = "SELECT CONCAT(first, ' ', last) as name, id FROM Actor ORDER BY first";
-              $result = $conn->query($sql);
+              $r = $GLOBALS['result'];
 
-              if ($result->num_rows > 0) {
-                while($row = $result->fetch_assoc()) {
+              if ($r->num_rows > 0) {
+                while($row = $r->fetch_assoc()) {
                   echo "<option value=" . $row["id"] . ">" . $row["name"] . "</option>";
                 }
               } else {
