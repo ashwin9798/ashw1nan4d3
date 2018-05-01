@@ -103,7 +103,7 @@
           <option>War</option>
           <option>Western</option>
         </select>
-        <input type="text" id="genre-input" name="genre" aria-describedby="basic-addon1">
+        <input type="text" id="genre-input" name="genre" aria-describedby="basic-addon1" style="display: none;">
       </div>
       <br/>
       <br/>
