@@ -1,0 +1,63 @@
+.add-area {
+  margin-right: 20%;
+  margin-left: 20%;
+  margin-top: 1%;
+}
+
+.input-fields {
+  margin: 2%;
+}
+
+.genre {
+  display: inline-block;
+}
+
+.submit {
+  height: 5%;
+  width: 8%;
+}
+
+input[type=submit] {
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  padding:5px 15px;
+  background:#337ab7;
+  color: #fff;
+  border:0 none;
+  border-color: #fff;
+  cursor:pointer;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  outline: 0;
+}
+
+#search-box {
+  background-color: black;
+  border: 1px solid #337ab7;
+  line-height: 0;
+  font-size: 17px;
+  box-sizing: border-box;
+  padding: 5px 10px;
+  border-radius: 60px;
+  color: #fff;
+  font-weight: 100;
+  letter-spacing: 0.01em;
+  margin-left: 50px;
+  margin-right: 20px;
+  outline: 0;
+}
+
+input:-webkit-autofill {
+  -webkit-text-fill-color: white;
+  -webkit-box-shadow: 0 0 0px 1000px #000 inset;
+}
+
+tr {
+  color: #fff;
+}
+
+html {
+  background-image: url("binding_dark.png");
+}
+body {
+  background-image: url("binding_dark.png");
+}

@@ -6,6 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <!-- Bootstrap -->
         <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="css/add-styles.css">
 </head>
 <body>
 </style>
@@ -13,22 +14,25 @@
 <br /><br />
 
 
-    <nav class="navbar navbar-fixed-top navbar-default">
-      <div class="container-fluid">
-        <div class="navbar-header">
-          <a class="navbar-brand" href="homepage.php">IMDB Clone</a>
-        </div>
-        <ul class="nav navbar-nav">
-          <li><a href="add_actor_director.php">Add Actor/Director</a></li>
-          <li><a href="add_movie.php">Add Movie Information</a></li>
-          <li><a href="add_actor_movie_relation.php">Add Movie/Actor Relation</a></li>
-          <li><a href="add_director_movie_relation.php">Add Movie/Director Relation</a></li>
-          <li><form action="homepage.php" method="GET" style="margin-top:10px;">
-      		<input type="text" name="query" style="margin-left: 50px; width: 300px"><?php ($_GET['query']);?></input>
-      		<input type="submit" value="Search" /></form></li>
-        </ul>
-      </div>
-    </nav>
+<nav class="navbar navbar-fixed-top navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="homepage.php">IMDB Clone</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li><a href="add_actor_director.php">Add Actor/Director</a></li>
+      <li><a href="add_movie.php">Add Movie Information</a></li>
+      <li><a href="add_actor_movie_relation.php">Add Movie/Actor Relation</a></li>
+      <li><a href="add_director_movie_relation.php">Add Movie/Director Relation</a></li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+      <li><form action="homepage.php" method="GET" style="margin-top:10px;">
+  		<input type="text" name="query" id="search-box"><?php if (isset($_GET['query'])){};?></input>
+  		<input type="submit" value="Search" style="margin-right: 15px;"/></form></li>
+    </ul>
+  </div>
+</nav>
+
 </br>
 
     <?php

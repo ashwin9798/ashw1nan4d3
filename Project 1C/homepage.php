@@ -6,6 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <!-- Bootstrap -->
         <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="css/add-styles.css">
 </head>
 <body>
 	<style>
@@ -14,7 +15,7 @@ border: 1px solid black;
 }
 </style>
 
-<nav class="navbar navbar-fixed-top navbar-default">
+<nav class="navbar navbar-fixed-top navbar-inverse">
   <div class="container-fluid">
     <div class="navbar-header">
       <a class="navbar-brand" href="homepage.php">IMDB Clone</a>
@@ -24,9 +25,11 @@ border: 1px solid black;
       <li><a href="add_movie.php">Add Movie Information</a></li>
       <li><a href="add_actor_movie_relation.php">Add Movie/Actor Relation</a></li>
       <li><a href="add_director_movie_relation.php">Add Movie/Director Relation</a></li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
       <li><form action="homepage.php" method="GET" style="margin-top:10px;">
-  		<input type="text" name="query" style="margin-left: 50px; width: 300px"><?php ($_GET['query']);?></input>
-  		<input type="submit" value="Search" /></form></li>
+  		<input type="text" name="query" id="search-box"><?php if (isset($_GET['query'])){};?></input>
+  		<input type="submit" value="Search" style="margin-right: 15px;"/></form></li>
     </ul>
   </div>
 </nav>
@@ -209,14 +212,14 @@ border: 1px solid black;
         }
 	}
 
-    if($user_input == '') {
-        echo '<h1 style="margin-left:5%;"> Search for a Movie or Actor in the search bar above! </h1>';
-    }
-    else {
-        if(!$q1 && !$q2) {
-            echo '<h1 style="margin-left:5%;"> Uh oh, we could not find that movie/actor in our database, try again! </h1>';
-        }
-    }
+  if($user_input == '') {
+      echo '<h1 style="margin-left:5%; color:#fff;"> Search for a Movie or Actor in the search bar above! </h1>';
+  }
+  else {
+      if(!$q1 && !$q2) {
+          echo '<h1 style="margin-left:5%;"> Uh oh, we could not find that movie/actor in our database, try again! </h1>';
+      }
+  }
 
 	$db->close();
 ?>
