@@ -46,15 +46,16 @@
     <div class="input-fields" id="input-fields">
     <form action="add_director_movie_relation.php" method="GET">
       <div class="title" style="display: flex; flex-flow: row;">
-        <span class="input-group-addon" id="basic-addon1" style="width: 10%;">Movie Title: </span>
+        <span class="input-group-addon" id="basic-addon1" style="width: 20%;">Movie Title: </span>
         <select class="selectpicker" data-live-search="true" onchange="changeTitle()" id="title">
+          <option value=""></option>;
             <?php
               $conn = new mysqli('localhost', 'cs143', '', 'TEST');
               if ($conn->connect_error) {
                 die("Connection failed: " . $conn->connect_error);
               }
 
-              $sql = "SELECT title, id FROM Movie ORDER BY title";
+              $sql = "SELECT DISTINCT title, id FROM Movie ORDER BY title";
               $result = $conn->query($sql);
 
               if ($result->num_rows > 0) {
@@ -71,8 +72,9 @@
       </div>
       <br/>
       <div class="director" style="display: flex; flex-flow: row;">
-        <span class="input-group-addon" id="basic-addon1" style="width: 8.3%;">Director: </span>
+        <span class="input-group-addon" id="basic-addon1" style="width: 12%;">Director: </span>
         <select class="selectpicker" data-live-search="true" onchange="changeDirector()" id="director">
+          <option value=""></option>;
             <?php
               $conn = new mysqli('localhost', 'cs143', '', 'TEST');
               if ($conn->connect_error) {
@@ -95,7 +97,7 @@
         <input type="text" id="director-input" name="director" aria-describedby="basic-addon1" style="display: none;">
       </div>
       <br/>
-      <input class="submit" type="submit" value="Submit" /></form>
+      <input class="submit" type="submit" value="Submit" onclick="return validate();"/></form>
     </form>
     </div>
     </div>
@@ -103,6 +105,12 @@
 </div>
 
 <script>
+  function validate() {
+    let text=document.getElementById("title-input").value;
+    if (text=='') {
+      alert("Error: No Movie Selected");
+    }
+  }
   function changeTitle() {
     var list = document.getElementById("title");
     var mid = list.options[list.selectedIndex].value;
@@ -121,21 +129,24 @@
     if($db->connect_errno > 0){
         die('Unable to connect to database [' . $db->connect_error . ']');
     }
-    $mid=intval($_GET["title"]);
-    $did=intval($_GET["director"]);
-    $role=$_GET["role"];
+
+    $mid = isset($_GET['title']) ? intval($_GET['title']) : '';
+    $did = isset($_GET['director']) ? intval($_GET['director']) : '';
 
     if ($mid!=0) {
 
       if ($did==0) {
-        echo "<script type='text/javascript'>alert('Director Field Empty!');</script>";
-        exit;
+        echo "<span style=\"font-size: 12px; margin: 20%;\"class=\"label label-danger\">Error: No Director selected</span>";
+        echo "<br/><br/>";
       }
 
       $add_ad_query = "INSERT INTO MovieDirector (mid, did) VALUES('$mid', '$did')";
 
       if($db->query($add_ad_query)) {
           echo "<span style=\"font-size: 18px; margin: 20%;\"class=\"label label-success\">Success: Relation Added</span>";
+      }
+      else {
+        echo "<span style=\"font-size: 18px; margin: 20%;\"class=\"label label-danger\">Error: Could not add Relation</span>";
       }
     }
 	$db->close();

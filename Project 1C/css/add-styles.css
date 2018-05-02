@@ -17,6 +17,36 @@
   width: 8%;
 }
 
+.title select{
+    padding: 5px 8px;
+    border-style: ridge;
+    border-bottom-left-radius: none;
+    border-top-left-radius: none;
+    background: transparent;
+    background-image: none;
+    outline: 0;
+}
+
+.director select{
+    padding: 5px 8px;
+    border-style: ridge;
+    border-bottom-left-radius: none;
+    border-top-left-radius: none;
+    background: transparent;
+    background-image: none;
+    outline: 0;
+}
+
+.actor select{
+    padding: 5px 8px;
+    border-style: ridge;
+    border-bottom-left-radius: none;
+    border-top-left-radius: none;
+    background: transparent;
+    background-image: none;
+    outline: 0;
+}
+
 input[type=submit] {
   font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
   padding:5px 15px;

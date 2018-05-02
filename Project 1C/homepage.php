@@ -48,7 +48,7 @@ border: 1px solid black;
     	die('Unable to connect to database [' . $db->connect_error . ']');
 	}
 
-	$user_input=$_GET["query"];
+  $user_input = isset($_GET['query']) ? addslashes($_GET['query']) : '';
     $user_input = preg_replace('/\s+/', ' ', $user_input);
 
     $user_input = trim($user_input);
@@ -217,7 +217,8 @@ border: 1px solid black;
 
   if($user_input == '') {
       // echo '<h1 style="margin-left:5%; color:#fff;"> Search for a Movie or Actor in the search bar above! </h1>';
-      echo '<marquee direction="right"> <h1 id="heading" style="margin-left:5%; color:#fff;"> Search for an Actor or Movie Above! </h1></marquee>';
+      echo '<marquee direction="right" scrollamount="13"> <h1 id="heading" style="margin-left:5%; color:#fff;"> Search for an Actor or Movie Above! </h1></marquee>';
+
   }
   else {
       if(!$q1 && !$q2) {

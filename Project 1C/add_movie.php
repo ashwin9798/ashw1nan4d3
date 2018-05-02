@@ -48,7 +48,7 @@
     <form action="add_movie.php" method="GET">
       <div class="input-group">
         <span class="input-group-addon" id="basic-addon1">Title: </span>
-        <input type="text" class="form-control" name="title" placeholder="Title" aria-describedby="basic-addon1">
+        <input type="text" class="form-control" name="title" placeholder="Title" id="title" aria-describedby="basic-addon1">
       </div>
       <br/>
       <div class="input-group">
@@ -107,7 +107,8 @@
       </div>
       <br/>
       <br/>
-      <input class="submit" type="submit" value="Submit" /></form>
+      <input class="submit" type="submit" value="Submit" onclick="return validate();"/>
+      <br/>
     </form>
     </div>
     </div>
@@ -115,6 +116,13 @@
 </div>
 
 <script>
+  function validate() {
+    let text=document.getElementById("title").value;
+    if (text=='') {
+      alert("Error: Title Field Empty");
+    }
+  }
+
   function getEventTarget(e) {
       e = e || window.event;
       return e.target || e.srcElement;
@@ -142,26 +150,28 @@
     if($db->connect_errno > 0){
         die('Unable to connect to database [' . $db->connect_error . ']');
     }
-    $title = isset($_GET['title']) ? $_GET['title'] : '';
+    $title = isset($_GET['title']) ? addslashes($_GET['title']) : '';
     $year = isset($_GET['year']) ? $_GET['year'] : '';
     $rating = isset($_GET['rating']) ? $_GET['rating'] : '';
-    $company = isset($_GET['company']) ? $_GET['company'] : '';
+    $company = isset($_GET['company']) ? addslashes($_GET['company']) : '';
     $genre = isset($_GET['genre']) ? $_GET['genre'] : '';
     $genres_list=explode(' ',$genre);
 
     if ($title!='') {
 
-      if ($year=='') {
-        echo "<script type='text/javascript'>alert('Year Field Empty!');</script>";
-        exit;
-      }
-      if ($rating=='') {
-        echo "<script type='text/javascript'>alert('Rating Field Empty!');</script>";
-        exit;
-      }
       if ($company=='') {
-        echo "<script type='text/javascript'>alert('Company Field Empty!');</script>";
-        exit;
+        echo "<span style=\"font-size: 12px; margin: 20%;\"class=\"label label-danger\">Error: Company Field Empty</span>";
+        echo "<br/><br/>";
+      }
+
+      if ($year=='') {
+        echo "<span style=\"font-size: 12px; margin: 20%;\"class=\"label label-danger\">Error: Year Field Empty</span>";
+        echo "<br/><br/>";
+      }
+
+      if ($rating=='') {
+        echo "<span style=\"font-size: 12px; margin: 20%;\"class=\"label label-danger\">Error: Rating Field Empty</span>";
+        echo "<br/><br/>";
       }
 
       $sql = "SELECT * FROM MaxMovieID";
@@ -176,6 +186,7 @@
         $sql = "UPDATE MaxMovieID SET id=" . $new_MaxID;
         if ($db->query($sql) === FALSE) {
           echo "<span style=\"font-size: 18px; margin: 20%;\"class=\"label label-danger\">Error: Max Movie ID not updated</span>";
+          echo "<br/><br/>";
         }
 
         foreach ($genres_list as $g)
@@ -188,6 +199,10 @@
           }
         }
         echo "<span style=\"font-size: 18px; margin: 20%;\"class=\"label label-success\">Success: Movie Added</span>";
+        echo "<br/><br/>";
+      }
+      else {
+        echo "<span style=\"font-size: 18px; margin: 20%;\"class=\"label label-danger\">Error: Could not add Movie</span>";
       }
     }
 	$db->close();

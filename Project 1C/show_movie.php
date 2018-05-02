@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <!-- Bootstrap -->
         <link href="css/bootstrap.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="css/add-styles.css">        
+        <link rel="stylesheet" href="css/add-styles.css">
 </head>
 <body>
 </style>
@@ -129,10 +129,18 @@
     }
 
     if($result = $db->query($genre_query)) {
+        echo '<p style="margin-left: 5%;"> Genre: ';
+        $num_genres = $result->num_rows;
+        $ind = 0;
 		while ($row = $result->fetch_assoc()) {
             $genre = $row['genre'];
+            echo $genre;
+            if($ind < $num_genres - 1) {
+                echo ' | ';
+            }
+            $ind = $ind+1;
     	}
-        echo '<p style="margin-left: 5%;"> Genre: ', $genre, '</p>';
+        echo '</p>';
         $result->free();
 	}
     else {
@@ -152,57 +160,62 @@
             $column_names[] = $val->name;
         }
 
-		//start table
-		echo '<table class="table table-bordered" style="width:90%; margin-left:5%;">';
+		if($result->num_rows > 0) {
+            //start table
+    		echo '<table class="table table-bordered" style="width:90%; margin-left:5%;">';
 
-		//column names (first row)
-		echo '<tr>';
+    		//column names (first row)
+    		echo '<tr>';
 
-		foreach ($column_names as $c) {
-            if($c == "last" || $c == "id" || $c == "dob") {
-                continue;
-            }
-            if($c == "first") {
-                echo '<td> Name', '</td>';
-            }
-            else {
-			    echo '<td>', $c, '</td>';
-            }
-		}
-		echo '</tr>';
-
-		//rows
-		while ($row = $result->fetch_assoc()) {
-			echo '<tr>';
-            $actor_name = '';
-			foreach ($column_names as $c) {
-                if($c == "dob") {
+    		foreach ($column_names as $c) {
+                if($c == "last" || $c == "id" || $c == "dob") {
                     continue;
                 }
                 if($c == "first") {
-                    $actor_name .= $row[$c];
-                    continue;
-                }
-                if($c == "id") {
-                    $id = $row[$c];
-                    continue;
-                }
-                if($c == "last") {
-                    $actor_name  .= ' ' . $row[$c];
-                    echo '<td><a href="show_actor.php?id=' , $id , '&name=' , $actor_name , '">', $actor_name, '</a></td>';
+                    echo '<td> Name', '</td>';
                 }
                 else {
-				    if($row[$c]) {
-					    echo '<td>', $row[$c], '</td>';
-                    }
-				    else {
-					    echo '<td>', 'N/A', '</td>';
-				    }
+    			    echo '<td>', $c, '</td>';
                 }
-	        }
-			echo '</tr>';
-    	}
-		echo '</table>';
+    		}
+    		echo '</tr>';
+
+    		//rows
+    		while ($row = $result->fetch_assoc()) {
+    			echo '<tr>';
+                $actor_name = '';
+    			foreach ($column_names as $c) {
+                    if($c == "dob") {
+                        continue;
+                    }
+                    if($c == "first") {
+                        $actor_name .= $row[$c];
+                        continue;
+                    }
+                    if($c == "id") {
+                        $id = $row[$c];
+                        continue;
+                    }
+                    if($c == "last") {
+                        $actor_name  .= ' ' . $row[$c];
+                        echo '<td><a href="show_actor.php?id=' , $id , '&name=' , $actor_name , '">', $actor_name, '</a></td>';
+                    }
+                    else {
+    				    if($row[$c]) {
+    					    echo '<td>', $row[$c], '</td>';
+                        }
+    				    else {
+    					    echo '<td>', 'N/A', '</td>';
+    				    }
+                    }
+    	        }
+    			echo '</tr>';
+        	}
+    		echo '</table>';
+        }
+        else {
+            echo '<p style="margin-left:5%;"> We don\'t have information on the actors in this movie</p>';
+        }
         $result->free();
 	}
     else {
@@ -222,7 +235,7 @@
             echo '<p style="margin-left: 5%"> No reviews yet </p>';
         }
         else {
-            echo '<p style="margin-left: 5%"> This movie has an average score of ', '<span style="color: #ff0000"><b>', $avg,'</b></span>', ' based on ', $num_reviews,  ' reviews</p>';
+            echo '<p style="margin-left: 5%"> This movie has an average score of &nbsp;', '<span style="color: #4286f4"><b>', $avg,'</b></span>', ' &nbsp;based on  ', $num_reviews,  ' reviews</p>';
         }
     }
 
@@ -241,7 +254,7 @@
             $rating = $row["rating"];
             $review = $row["comment"];
 
-            echo '<div style="width: 90%; margin-top: 0.5%; margin-left: 5%; border:1px solid grey"><p style="margin-left: 1%"><span style="color: #ff0000"><b>', $username, '</b></span>', ' rated this movie ', $comment_time, ':</p><p style="margin-left: 3%">', $review, '</p><p style="margin-left: 1%"> Score: ', $rating, '/5 stars</p></div>';
+            echo '<div style="width: 90%; margin-top: 0.5%; margin-left: 5%; border:1px solid grey"><p style="margin-left: 1%"><span style="color: #ef4843"><b>', $username, '&nbsp;</b></span>', ' reviewed on ', $comment_time, ':</p><p style="margin-left: 3%">', $review, '</p><p style="margin-left: 1%"> Score: ', $rating, '/5 stars</p></div>';
 
         }
         echo '</table>';

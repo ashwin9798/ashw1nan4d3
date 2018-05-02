@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <!-- Bootstrap -->
         <link href="css/bootstrap.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="css/add-styles.css">        
+        <link rel="stylesheet" href="css/add-styles.css">
     </head>
 <body>
 
@@ -84,45 +84,50 @@
         }
 
 		//start table
-		echo '<table class="table table-hover table-bordered" style="width:90%; margin-left:5%;">';
+		if($result->num_rows > 0) {
+            echo '<table class="table table-hover table-bordered" style="width:90%; margin-left:5%;">';
 
-		//column names (first row)
-		echo '<tr>';
+    		//column names (first row)
+    		echo '<tr>';
 
-		foreach ($column_names as $c) {
-            if($c == "mid") {
-                continue;
-            }
-			 echo '<td>', $c, '</td>';
-		}
-		echo '</tr>';
-
-		//rows
-		while ($row = $result->fetch_assoc()) {
-			echo '<tr>';
-            $movie_name = '';
-            $mid = 0;
-			foreach ($column_names as $c) {
+    		foreach ($column_names as $c) {
                 if($c == "mid") {
-                    $mid = $row[$c];
                     continue;
                 }
-                if($c == "Movie") {
-                    $movie_name = $row[$c];
-                    echo '<td><a href="show_movie.php?mid=' , $mid , '&name=' , $movie_name , '">', $movie_name, '</a></td>';
-                }
-                else {
-				    if($row[$c]) {
-					    echo '<td>', $row[$c], '</td>';
+    			 echo '<td>', $c, '</td>';
+    		}
+    		echo '</tr>';
+
+    		//rows
+    		while ($row = $result->fetch_assoc()) {
+    			echo '<tr>';
+                $movie_name = '';
+                $mid = 0;
+    			foreach ($column_names as $c) {
+                    if($c == "mid") {
+                        $mid = $row[$c];
+                        continue;
                     }
-				    else {
-					    echo '<td>', 'N/A', '</td>';
-				    }
-                }
-	        }
-			echo '</tr>';
-    	}
-		echo '</table>';
+                    if($c == "Movie") {
+                        $movie_name = $row[$c];
+                        echo '<td><a href="show_movie.php?mid=' , $mid , '&name=' , $movie_name , '">', $movie_name, '</a></td>';
+                    }
+                    else {
+    				    if($row[$c]) {
+    					    echo '<td>', $row[$c], '</td>';
+                        }
+    				    else {
+    					    echo '<td>', 'N/A', '</td>';
+    				    }
+                    }
+    	        }
+    			echo '</tr>';
+        	}
+    		echo '</table>';
+        }
+        else {
+            echo '<p style="margin-left:5%;"> We don\'t have information on the movies this actor has been in</p>';
+        }
         $result->free();
 	}
     else {

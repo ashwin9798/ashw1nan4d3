@@ -13,6 +13,10 @@ $movie_id = $_GET["id"];
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <!-- Bootstrap -->
         <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="css/add-styles.css">
+
+        <script src="js/jquery.min.js"></script>
+        <script type="text/javascript" src="js/bootstrap.min.js"></script>
 </head>
 <body>
 </style>
@@ -51,7 +55,7 @@ $movie_id = $_GET["id"];
       <input type="hidden" name="mid" value="<?=$mid;?>" />
       <input type="hidden" name="name" value="<?=$movie_name;?>" />
       <p style="margin-left: 5%"><b>Your name:<b></p>
-      <input type="text" name="username" style="margin-left: 5%; width: 20%">
+      <input type="text" name="username" style="margin-left: 5%; width: 20%" placeholder="Optional (Leave blank for Anonymous Review)">
       </br></br>
       <p style="margin-left: 5%"><b>Rating:<b></p>
       <select class="form-control" name="score" id="rating" style="margin-left: 5%; width: 20%">
@@ -63,9 +67,18 @@ $movie_id = $_GET["id"];
     </select>
     </br>
     <p style="margin-left: 5%"><b>Comments:<b></p>
-      <textarea style="margin-left: 5%; width: 40%;" class="form-control" name="comment" rows="5" placeholder="no more than 500 characters"></textarea>
+      <textarea id="comment" style="margin-left: 5%; width: 40%;" class="form-control" name="comment" rows="5" placeholder="no more than 500 characters"></textarea>
 </br>
-      <input style="margin-left: 5%" type="submit" value="Add Review!" /></form>
+      <input style="margin-left: 5%" type="submit" value="Add Review!" onclick="return validate();"/></form>
+
+<script>
+  function validate() {
+    let text=document.getElementById("comment").value;
+    if (text=='') {
+      alert("Error: Comment Field Empty");
+    }
+  }
+</script>
 
 <?php
 
@@ -73,9 +86,10 @@ $movie_id = $_GET["id"];
     if($db->connect_errno > 0){
         die('Unable to connect to database [' . $db->connect_error . ']');
     }
-    $score=$_GET["score"];
-    $comment=$_GET["comment"];
-    $username=$_GET["username"];
+
+    $score = isset($_GET['score']) ? $_GET['score'] : '';
+    $comment = isset($_GET['comment']) ? addslashes($_GET['comment']) : '';
+    $username = isset($_GET['username']) ? $_GET['username'] : '';
 
     if($score && $comment) {
         if($username == '') {
@@ -93,7 +107,7 @@ $movie_id = $_GET["id"];
     }
     else {
         if(!$comment) {
-            echo '</br> <p> Your form seems incomplete </p>';
+            echo '';
         }
     }
 	$db->close();

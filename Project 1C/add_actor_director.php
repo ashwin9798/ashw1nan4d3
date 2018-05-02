@@ -103,7 +103,7 @@
         <input type="text" id="sex-input" name="sex" aria-describedby="basic-addon1" style="display: none;">
       </div>
       <br/>
-      <input class="submit" type="submit" value="Submit" /></form>
+      <input class="submit" type="submit" value="Submit" onclick="return validate();"/></form>
     </form>
     </div>
     </div>
@@ -111,6 +111,12 @@
 </div>
 
 <script>
+  function validate() {
+    let text=document.getElementById("option-input").value;
+    if (text=='') {
+      alert("Error: Pick Either Actor or Director");
+    }
+  }
   function getEventTarget(e) {
       e = e || window.event;
       return e.target || e.srcElement;
@@ -133,35 +139,35 @@
     if($db->connect_errno > 0){
         die('Unable to connect to database [' . $db->connect_error . ']');
     }
-    $option=$_GET["option"];
+    $option = isset($_GET['option']) ? $_GET['option'] : '';
     if ($option=="") {
       exit;
     }
-    $first=$_GET["first_name"];
-    $last=$_GET["last_name"];
-    $dob=$_GET["dob"];
-    $dod=$_GET["dod"];
+    $first = isset($_GET['first_name']) ? addslashes($_GET['first_name']) : '';
+    $last = isset($_GET['last_name']) ? addslashes($_GET['last_name']) : '';
+    $dob = isset($_GET['dob']) ? $_GET['dob'] : '';
+    $dod = isset($_GET['$dod']) ? $_GET['$dod'] : '';
     if ($option=="Actor") {
-      $sex=$_GET["sex"];
+      $sex = isset($_GET['sex']) ? $_GET['sex'] : '';
     }
 
     if ($option=="Actor") {
 
       if ($first=='') {
-        echo "<script type='text/javascript'>alert('First Name Field Empty!');</script>";
-        exit;
+        echo "<span style=\"font-size: 12px; margin: 20%;\"class=\"label label-danger\">Error: First Name Field Empty</span>";
+        echo "<br/><br/>";
       }
       if ($last=='') {
-        echo "<script type='text/javascript'>alert('Last Name Field Empty!');</script>";
-        exit;
+        echo "<span style=\"font-size: 12px; margin: 20%;\"class=\"label label-danger\">Error: Last Name Field Empty</span>";
+        echo "<br/><br/>";
       }
       if ($dob=='') {
-        echo "<script type='text/javascript'>alert('Date of Birth Field Empty!');</script>";
-        exit;
+        echo "<span style=\"font-size: 12px; margin: 20%;\"class=\"label label-danger\">Error: Date of Birth Field Empty</span>";
+        echo "<br/><br/>";
       }
       if ($sex=='') {
-        echo "<script type='text/javascript'>alert('Sex Field Empty!');</script>";
-        exit;
+        echo "<span style=\"font-size: 12px; margin: 20%;\"class=\"label label-danger\">Error: Sex Field Empty</span>";
+        echo "<br/><br/>";
       }
 
       $sql = "SELECT * FROM MaxPersonID";
@@ -177,27 +183,30 @@
         $add_ad_query = "INSERT INTO Actor (id, last, first, sex, dob, dod) VALUES('$new_MaxID', '$last', '$first', '$sex', '$dob', '$dod')";
       }
       if($db->query($add_ad_query)) {
-          echo "<span style=\"font-size: 18px; margin: 5%;\"class=\"label label-success\">Success: Actor Added</span>";
+          echo "<span style=\"font-size: 18px; margin: 20%;\"class=\"label label-success\">Success: Actor Added</span>";
 
           $sql = "UPDATE MaxPersonID SET id=" . $new_MaxID;
           if ($db->query($sql) === FALSE) {
-            echo "<span style=\"font-size: 18px; margin: 5%;\"class=\"label label-danger\">Error: Max Person ID not updated</span>";
+            echo "<span style=\"font-size: 18px; margin: 20%;\"class=\"label label-danger\">Error: Max Person ID not updated</span>";
           }
+      }
+      else {
+        echo "<span style=\"font-size: 18px; margin: 20%;\"class=\"label label-danger\">Error: Could not add Actor</span>";
       }
     }
 
     else {
       if ($first=='') {
-        echo "<script type='text/javascript'>alert('First Name Field Empty!');</script>";
-        exit;
+        echo "<span style=\"font-size: 12px; margin: 20%;\"class=\"label label-danger\">Error: First Name Field Empty</span>";
+        echo "<br/><br/>";
       }
       if ($last=='') {
-        echo "<script type='text/javascript'>alert('Last Name Field Empty!');</script>";
-        exit;
+        echo "<span style=\"font-size: 12px; margin: 20%;\"class=\"label label-danger\">Error: Last Name Field Empty</span>";
+        echo "<br/><br/>";
       }
       if ($dob=='') {
-        echo "<script type='text/javascript'>alert('Date of Birth Field Empty!');</script>";
-        exit;
+        echo "<span style=\"font-size: 12px; margin: 20%;\"class=\"label label-danger\">Error: Date of Birth Field Empty</span>";
+        echo "<br/><br/>";
       }
 
       $sql = "SELECT * FROM MaxPersonID";
@@ -219,6 +228,9 @@
           if ($db->query($sql) === FALSE) {
             echo "<span style=\"font-size: 18px; margin: 20%;\"class=\"label label-danger\">Error: Max Person ID not updated</span>";
           }
+      }
+      else {
+        echo "<span style=\"font-size: 18px; margin: 20%;\"class=\"label label-danger\">Error: Could not add Director</span>";
       }
     }
 	$db->close();
