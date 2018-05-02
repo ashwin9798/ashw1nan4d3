@@ -160,18 +160,24 @@
     if ($title!='') {
 
       if ($company=='') {
-        echo "<span style=\"font-size: 12px; margin: 20%;\"class=\"label label-danger\">Error: Company Field Empty</span>";
+        echo "<a href=\"add_movie.php\"><span style=\"font-size: 12px; margin: 20%;\"class=\"label label-danger\">Error: Company Field Empty</span></a>";
         echo "<br/><br/>";
       }
 
       if ($year=='') {
-        echo "<span style=\"font-size: 12px; margin: 20%;\"class=\"label label-danger\">Error: Year Field Empty</span>";
+        echo "<a href=\"add_movie.php\"><span style=\"font-size: 12px; margin: 20%;\"class=\"label label-danger\">Error: Year Field Empty</span></a>";
         echo "<br/><br/>";
       }
 
       if ($rating=='') {
-        echo "<span style=\"font-size: 12px; margin: 20%;\"class=\"label label-danger\">Error: Rating Field Empty</span>";
+        echo "<a href=\"add_movie.php\"><span style=\"font-size: 12px; margin: 20%;\"class=\"label label-danger\">Error: Rating Field Empty</span></a>";
         echo "<br/><br/>";
+      }
+
+      $validateYear = intval($year);
+      if ($validateYear>=1000 && $validateYear<=9999) {}
+      else {
+        echo '<script type="text/javascript">alert("Year must be a number between 1000 and 9999");</script>';
       }
 
       $sql = "SELECT * FROM MaxMovieID";
@@ -185,7 +191,7 @@
 
         $sql = "UPDATE MaxMovieID SET id=" . $new_MaxID;
         if ($db->query($sql) === FALSE) {
-          echo "<span style=\"font-size: 18px; margin: 20%;\"class=\"label label-danger\">Error: Max Movie ID not updated</span>";
+          echo "<a href=\"add_movie.php\"><span style=\"font-size: 18px; margin: 20%;\"class=\"label label-danger\">Error: Max Movie ID not updated</span></a>";
           echo "<br/><br/>";
         }
 
@@ -198,11 +204,11 @@
             }
           }
         }
-        echo "<span style=\"font-size: 18px; margin: 20%;\"class=\"label label-success\">Success: Movie Added</span>";
+        echo "<a href=\"add_movie.php\"><span style=\"font-size: 18px; margin: 20%;\"class=\"label label-success\">Success: Movie Added</span>";
         echo "<br/><br/>";
       }
       else {
-        echo "<span style=\"font-size: 18px; margin: 20%;\"class=\"label label-danger\">Error: Could not add Movie</span>";
+        echo "<a href=\"add_movie.php\"><span style=\"font-size: 18px; margin: 20%;\"class=\"label label-danger\">Error: Could not add Movie</span></a>";
       }
     }
 	$db->close();

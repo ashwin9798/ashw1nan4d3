@@ -137,13 +137,13 @@
     if($db->connect_errno > 0){
         die('Unable to connect to database [' . $db->connect_error . ']');
     }
-    $mid = isset($_GET['title']) ? intval($_GET['title']) : 0;
-    $aid = isset($_GET['actor']) ? intval($_GET['actor']) : 0;
+    $mid = isset($_GET['title']) ? intval($_GET['title']) : null;
+    $aid = isset($_GET['actor']) ? intval($_GET['actor']) : null;
     $role = isset($_GET['role']) ? $_GET['role'] : '';
 
-    if ($mid!=0) {
+    if ($mid!=null) {
 
-      if ($aid==0) {
+      if ($aid==null) {
         echo "<span style=\"font-size: 12px; margin: 20%;\"class=\"label label-danger\">Error: No Actor selected</span>";
         echo "<br/><br/>";
       }
@@ -154,7 +154,11 @@
 
       $add_ad_query = "INSERT INTO MovieActor (mid, aid, role) VALUES('$mid', '$aid', '$role')";
 
-      if($db->query($add_ad_query)) {
+      echo $aid;
+      echo $mid;
+      echo $role;
+
+      if (($db->query($add_ad_query)) && $aid!=null && $mid!=null) {
           echo "<span style=\"font-size: 18px; margin: 20%;\"class=\"label label-success\">Success: Relation Added</span>";
       }
       else {

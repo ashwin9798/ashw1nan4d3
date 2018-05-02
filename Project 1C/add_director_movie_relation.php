@@ -143,10 +143,10 @@
       $add_ad_query = "INSERT INTO MovieDirector (mid, did) VALUES('$mid', '$did')";
 
       if($db->query($add_ad_query)) {
-          echo "<span style=\"font-size: 18px; margin: 20%;\"class=\"label label-success\">Success: Relation Added</span>";
+          echo "<a href=\"add_director_movie_relation.php\"><span style=\"font-size: 18px; margin: 20%;\"class=\"label label-success\">Success: Relation Added</span></a>";
       }
       else {
-        echo "<span style=\"font-size: 18px; margin: 20%;\"class=\"label label-danger\">Error: Could not add Relation</span>";
+        echo "<a href=\"add_director_movie_relation.php\"><span style=\"font-size: 18px; margin: 20%;\"class=\"label label-danger\">Error: Could not add Relation</span></a>";
       }
     }
 	$db->close();
